@@ -2,10 +2,35 @@
 # https://stackoverflow.com/a/44688216
 
 project="$1"  # HeinrichConvidera/wiki-test
-tmp_dir="tmp.$$"
+if [[ "$project" == "" ]]
+then
+    project="$(git config --get remote.origin.url)"
+    if [[ "${project##*.}" == "git" ]]
+    then
+        # git@github.com:HeinrichConvidera.wiki.git
+        project="${project%.*}.wiki.git"
+    else
+        # https://github.com/HeinrichConvidera/wiki-test.git
+        project="${project}.wiki"
+    fi
+else
+    if [[ "${project%%:*}" != "http" && "${project%%:*}" != "https" && "${project%%@*}" != "git" ]]
+    then
+        # not:
+        #   - http://github.com/HeinrichConvidera/wiki-test.git
+        #   - https://github.com/HeinrichConvidera/wiki-test.git
+        #   - git@github.com:HeinrichConvidera.wiki.git
+        # build git@... link
+        # alternative: build http(s)://... link
+        project="git@github.com:${project}.wiki.git"
+    fi
+fi
+echo "$project"
+
 
 # download wiki
-git clone "git@github.com:${project}.wiki.git" "$tmp_dir"
+tmp_dir="tmp.$$"
+git clone "${project}" "${tmp_dir}"
 cd "$tmp_dir"
 
 # custom css
