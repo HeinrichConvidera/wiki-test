@@ -1,0 +1,4 @@
+.markdown-body .highlight pre,
+.markdown-body pre{
+  overflow:visible !important;
+}
