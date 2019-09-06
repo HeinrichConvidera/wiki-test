@@ -1,0 +1,5 @@
+{
+    "files.exclude": {
+        "**/*.md.html": true
+    }
+}
